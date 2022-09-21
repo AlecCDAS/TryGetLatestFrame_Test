@@ -344,6 +344,28 @@ namespace UnityEngine.XR.ARFoundation.Samples
             rawImage.enabled = true;
         }
 
+
+        /// <summary>
+        /// This is to show that the TryGetLatestFrame() method no longer runs smoothly. Even in a blank sample scene created by Unity.
+        /// </summary>
+        unsafe void UpdateCameraPose()
+        {
+            var camParams = new XRCameraParams
+            {
+                screenHeight = Screen.height,
+                screenWidth = Screen.width,
+                screenOrientation = Screen.orientation,
+                zNear = m_CameraManager.GetComponent<Camera>().nearClipPlane,
+                zFar = m_CameraManager.GetComponent<Camera>().farClipPlane
+            };
+
+            if (!cameraManager.subsystem.TryGetLatestFrame(camParams, out XRCameraFrame frame))
+            {
+                return;
+            }
+
+        }
+
         void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
         {
             UpdateCameraImage();
@@ -351,6 +373,7 @@ namespace UnityEngine.XR.ARFoundation.Samples
             UpdateHumanStencilImage();
             UpdateEnvironmentDepthImage();
             UpdateEnvironmentDepthConfidenceImage();
+            UpdateCameraPose();
         }
 
         Texture2D m_CameraTexture;
